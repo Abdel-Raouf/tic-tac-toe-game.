@@ -1,20 +1,47 @@
+//import react and react-dom from package.json.
 import React from 'react';
 import ReactDOM from 'react-dom';
+//connect css file with our index.js file.
 import './index.css';
-
+//square component that will be reponsible for squares in our game (applyinh: single responsibility principle).
 class Square extends React.Component {
+  constructor(props){
+    super(props);
+    //initial state of the square component.
+    this.state = {
+      value: null
+    };
+  }
+
   render() {
     return (
-      <button className="square">
-        {/* TODO */}
+      <button className="square" onClick={() => this.props.onClick()} >
+        {this.props.value}
       </button>
     );
   }
 }
-
+//Board component that is responsible for the whole board that contain square.
 class Board extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      squares: Array(9).fill(null),
+    }
+  }
+  handleClick(i){
+    const squares = this.state.squares.slice();
+    squares[i] = 'X';
+    this.setState({squares: squares});
+  }
+  // put the square component in a renderSquare method to loop through squares as if in an array.
   renderSquare(i) {
-    return <Square />;
+    return(
+      <Square
+        value={this.state.squares[i]}
+        onClick={() => this.handleClick(i)}
+      />
+    );
   }
 
   render() {
@@ -42,8 +69,9 @@ class Board extends React.Component {
     );
   }
 }
-
+// parent component (owner component of the state).
 class Game extends React.Component {
+  // description of what will be rendered on the screen
   render() {
     return (
       <div className="game">
@@ -60,7 +88,7 @@ class Game extends React.Component {
 }
 
 // ========================================
-
+//actuall Dom that will render the output on the screen
 ReactDOM.render(
   <Game />,
   document.getElementById('root')
